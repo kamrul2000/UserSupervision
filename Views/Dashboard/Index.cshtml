@@ -1,33 +1,48 @@
 ﻿@model IEnumerable<UserSupervision.Models.AppUser>
 
-<h2>All Users</h2>
+@{
+    ViewBag.Title = "All Users";
+}
 
-<table border="1">
-    <thead>
-        <tr>
-            <th>FullName</th>
-            <th>Email</th>
-            <th>Mobile</th>
-            <th>Address</th>
-            <th>RoleId</th>
-            <th>BranchId</th>
-            <th>Status</th>
-            <th>Created At</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var user in Model)
-        {
+<div class="container mt-4">
+    <h2 class="text-center mb-4">All Users</h2>
+
+    <table class="table table-bordered table-striped table-hover">
+        <thead class="table-dark">
             <tr>
-                <td>@user.FullName</td>
-                <td>@user.Email</td>
-                <td>@user.Mobile</td>
-                <td>@user.Address</td>
-                <td>@user.RoleId</td>
-                <td>@user.BranchId</td>
-                <td>@user.Status</td>
-                <td>@user.CreatedAt.ToString("g")</td>
+                <th>Full Name</th>
+                <th>Email</th>
+                <th>Mobile</th>
+                <th>Address</th>
+                <th>Role ID</th>
+                <th>Branch ID</th>
+                <th>Status</th>
+                <th>Created At</th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @foreach (var user in Model)
+            {
+                <tr>
+                    <td>@user.FullName</td>
+                    <td>@user.Email</td>
+                    <td>@user.Mobile</td>
+                    <td>@user.Address</td>
+                    <td>@user.RoleId</td>
+                    <td>@user.BranchId</td>
+                    <td>
+                        @if (user.Status)
+                        {
+                            <span class="badge bg-success">Active</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-danger">Inactive</span>
+                        }
+                    </td>
+                    <td>@user.CreatedAt.ToString("g")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

@@ -27,7 +27,7 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
 
-app.UseAuthentication(); // 👈 Important
+app.UseAuthentication(); 
 app.UseAuthorization();
 
 app.MapControllerRoute(
