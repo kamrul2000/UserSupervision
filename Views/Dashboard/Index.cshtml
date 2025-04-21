@@ -1,0 +1,33 @@
+﻿@model IEnumerable<UserSupervision.Models.AppUser>
+
+<h2>All Users</h2>
+
+<table border="1">
+    <thead>
+        <tr>
+            <th>FullName</th>
+            <th>Email</th>
+            <th>Mobile</th>
+            <th>Address</th>
+            <th>RoleId</th>
+            <th>BranchId</th>
+            <th>Status</th>
+            <th>Created At</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in Model)
+        {
+            <tr>
+                <td>@user.FullName</td>
+                <td>@user.Email</td>
+                <td>@user.Mobile</td>
+                <td>@user.Address</td>
+                <td>@user.RoleId</td>
+                <td>@user.BranchId</td>
+                <td>@user.Status</td>
+                <td>@user.CreatedAt.ToString("g")</td>
+            </tr>
+        }
+    </tbody>
+</table>
