@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using System.Security.Claims;
 using Microsoft.EntityFrameworkCore;
 using UserSupervision.Models;
+using UserSupervision.Models.ViewModel;
 using UserSupervision.Data;
 
 namespace UserSupervision.Controllers
@@ -74,7 +75,7 @@ namespace UserSupervision.Controllers
                 FullName = model.FullName,
                 Email = model.Email,
                 Password = model.Password,
-                Mobile = model.Mobile,
+                Mobile = int.Parse(model.Mobile),
                 Address = model.Address,
                 RoleId = 1,
                 BranchId = null,

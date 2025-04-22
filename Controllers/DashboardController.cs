@@ -17,12 +17,19 @@ namespace UserSupervision.Controllers
 
         public async Task<IActionResult> Index()
         {
-            
-            var usersWithNoBranch = await _context.Users
+            try
+            {
+                var usersWithNoBranch = await _context.Users
                 .Where(u => u.BranchId == null)
                 .ToListAsync();
 
-            return View(usersWithNoBranch);
+                return View(usersWithNoBranch);
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex);
+                throw ex;
+            }
         }
 
 

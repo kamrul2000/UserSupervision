@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
+namespace UserSupervision.Models.ViewModel;
 public class RegisterViewModel
 {
     [Required]
