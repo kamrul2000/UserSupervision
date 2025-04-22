@@ -6,8 +6,8 @@
     <div class="row justify-content-center">
         <div class="col-md-6">
             <div class="card shadow-lg">
-                <div class="card-header text-center bg-primary text-white">
-                    <h3>Login</h3>
+                <div class="card-header bg-gradient text-black">
+                    <h4 class="mb-0">Login</h4>
                 </div>
                 <div class="card-body">
                     <form method="post" asp-action="Login">
@@ -18,10 +18,17 @@
                         <div class="mb-3">
                             <label for="password" class="form-label">Password</label>
                             <input type="password" class="form-control" id="password" name="password" required placeholder="Enter your password" />
-                        </div>
+                        </div>                                         
                         <div class="d-grid">
-                            <button type="submit" class="btn btn-primary">Login</button>
+                            <button type="submit" class="btn btn-success">Login</button>
                         </div>
+                        <br />
+                        <div class="d-flex justify-content-center align-items-center">
+                            <span class="me-2">Not yet have an account?</span>
+                            <a class="text-decoration-none text-primary" asp-controller="Account" asp-action="Register">Register</a>
+                        </div>
+
+
                         @if (ViewBag.Error != null)
                         {
                             <div class="alert alert-danger mt-3" role="alert">

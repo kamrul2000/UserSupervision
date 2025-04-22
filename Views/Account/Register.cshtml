@@ -3,11 +3,11 @@
     ViewBag.Title = "User Registration";
 }
 
-<div class="container mt-5">
+<div class="container mt-5 mb-5">
     <div class="row justify-content-center">
         <div class="col-md-6">
             <div class="card shadow rounded">
-                <div class="card-header bg-primary text-white">
+                <div class="card-header bg-gradient text-black">
                     <h4 class="mb-0">User Registration</h4>
                 </div>
                 <div class="card-body">
@@ -36,6 +36,11 @@
                         <div class="d-grid">
                             <button type="submit" class="btn btn-success">Register</button>
                         </div>
+                        <br />
+                        <div class="d-flex justify-content-center align-items-center">
+                            <span class="me-2">Already have an account!</span>
+                            <a class="text-decoration-none text-primary" asp-controller="Account" asp-action="Login">Login</a>
+                        </div>                    
                     </form>
                 </div>
             </div>
