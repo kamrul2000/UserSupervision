@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using UserSupervision.Models;
+using UserSupervision.Data;
 
 namespace UserSupervision.Controllers
 {

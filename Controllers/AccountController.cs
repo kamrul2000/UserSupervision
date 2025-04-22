@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using System.Security.Claims;
 using Microsoft.EntityFrameworkCore;
 using UserSupervision.Models;
+using UserSupervision.Data;
 
 namespace UserSupervision.Controllers
 {
@@ -68,7 +69,7 @@ namespace UserSupervision.Controllers
 
             var subscriptionId = await GetDefaultSubscriptionId();
 
-            var user = new AppUser
+            var user = new User
             {
                 FullName = model.FullName,
                 Email = model.Email,

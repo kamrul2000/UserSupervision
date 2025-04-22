@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using UserSupervision.Models;
+using UserSupervision.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
