@@ -1,14 +1,19 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace UserSupervision.Models
 {
+    [Table("Users")]
     public class AppUser
     {
         public int Id { get; set; }
         public string? FullName { get; set; }   
         public string? Email { get; set; }
         public string? Password { get; set; }
-        public int? Mobile { get; set; }          
+
+
+
+        public string Mobile { get; set; }
         public string? Address { get; set; }
         public int? RoleId { get; set; }
         public int? BranchId { get; set; }
@@ -16,6 +21,7 @@ namespace UserSupervision.Models
         public bool Status { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
+       
     }
 
 }

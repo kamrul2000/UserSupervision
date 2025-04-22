@@ -48,10 +48,60 @@ namespace UserSupervision.Controllers
             return View();
         }
 
-        public async Task<IActionResult> Logout()
+        [HttpGet]
+        public IActionResult Register()
         {
-            await HttpContext.SignOutAsync("MyCookieAuth");
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Register(RegisterViewModel model)
+        {
+            if (!ModelState.IsValid)
+                return View(model);
+
+            if (await _context.Users.AnyAsync(u => u.Email == model.Email))
+            {
+                ModelState.AddModelError("Email", "Email already exists.");
+                return View(model);
+            }
+
+            var subscriptionId = await GetDefaultSubscriptionId();
+
+            var user = new AppUser
+            {
+                FullName = model.FullName,
+                Email = model.Email,
+                Password = model.Password,
+                Mobile = model.Mobile,
+                Address = model.Address,
+                RoleId = 1,
+                BranchId = null,
+                Status = true,
+                SubscriptionId = subscriptionId,
+                CreatedAt = DateTime.Now,
+                UpdatedAt = DateTime.Now
+               
+            };
+
+            _context.Users.Add(user); 
+
+            await _context.SaveChangesAsync();
+
             return RedirectToAction("Login");
+        }
+
+        private async Task<int> GetDefaultSubscriptionId()
+        {
+            var subscription = await _context.Subscriptions
+                .Where(s => s.IsActive)
+                .OrderBy(s => s.Id)
+                .FirstOrDefaultAsync();
+
+            if (subscription == null)
+                throw new Exception("No active subscription found");
+
+            return subscription.Id;
         }
     }
 }

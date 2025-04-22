@@ -18,6 +18,7 @@
                 <th>Branch ID</th>
                 <th>Status</th>
                 <th>Created At</th>
+                <th>Day</th>
             </tr>
         </thead>
         <tbody>
@@ -40,7 +41,10 @@
                             <span class="badge bg-danger">Inactive</span>
                         }
                     </td>
-                    <td>@user.CreatedAt.ToString("g")</td>
+                    <td>@user.CreatedAt.ToString("yyyy-MM-dd")</td>
+                    <td>@((DateTime.Now.Date - user.CreatedAt.Date).Days)</td>
+
+
                 </tr>
             }
         </tbody>

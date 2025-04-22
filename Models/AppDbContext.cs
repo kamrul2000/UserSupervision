@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
+using UserSupervision.Models;
 
 namespace UserSupervision.Models
 {
@@ -9,5 +10,8 @@ namespace UserSupervision.Models
 
         public DbSet<SupervisionUser> SupervisionTable { get; set; }
         public DbSet<AppUser> Users { get; set; }
+        public DbSet<Subscription> Subscriptions { get; set; }
+
+
     }
 }
