@@ -92,6 +92,14 @@ namespace UserSupervision.Controllers
             return RedirectToAction("Login");
         }
 
+        [HttpPost]
+        public async Task<IActionResult> Logout()
+        {
+            await HttpContext.SignOutAsync("MyCookieAuth");
+            return RedirectToAction("Login", "Account");
+        }
+
+
         private async Task<int> GetDefaultSubscriptionId()
         {
             var subscription = await _context.Subscriptions
