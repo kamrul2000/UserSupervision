@@ -6,8 +6,10 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services
 builder.Services.AddControllersWithViews();
-builder.Services.AddDbContext<AppDbContext>(options =>
+builder.Services.AddDbContext<AccuStockDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddDbContext<AppDbContext>(
+    options => options.UseSqlServer(builder.Configuration.GetConnectionString("SecondConnection")));
 
 builder.Services.AddAuthentication("MyCookieAuth")
     .AddCookie("MyCookieAuth", options =>
@@ -35,3 +37,13 @@ app.MapControllerRoute(
     pattern: "{controller=Account}/{action=Login}/{id?}");
 
 app.Run();
+
+
+
+/*
+ * 
+ * ✅ To Add a Migration:
+    Add-Migration AddNameTable -Context AppDbContext
+✅ To Apply the Migration (Update the DB):
+Update-Database -Context AppDbContext
+ */

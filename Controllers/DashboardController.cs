@@ -8,9 +8,9 @@ namespace UserSupervision.Controllers
     [Authorize]
     public class DashboardController : Controller
     {
-        private readonly AppDbContext _context;
+        private readonly AccuStockDbContext _context;
 
-        public DashboardController(AppDbContext context)
+        public DashboardController(AccuStockDbContext context)
         {
             _context = context;
         }

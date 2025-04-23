@@ -11,11 +11,13 @@ namespace UserSupervision.Controllers
 {
     public class AccountController : Controller
     {
-        private readonly AppDbContext _context;
+        private readonly AccuStockDbContext _context;
+        private readonly AppDbContext _appDbContext;
 
-        public AccountController(AppDbContext context)
+        public AccountController(AccuStockDbContext context, AppDbContext appDbContext)
         {
             _context = context;
+            _appDbContext = appDbContext;
         }
 
         [HttpGet]
@@ -27,7 +29,7 @@ namespace UserSupervision.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(string email, string password)
         {
-            var user = await _context.SupervisionTable
+            var user = await _appDbContext.SupervisionTable
                 .FirstOrDefaultAsync(u => u.Email == email && u.Password == password);
 
             if (user != null)
