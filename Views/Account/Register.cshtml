@@ -1,51 +1,54 @@
 ﻿@model UserSupervision.Models.ViewModel.RegisterViewModel;
 @{
+    Layout = "_AdminLayout";
     ViewBag.Title = "User Registration";
 }
 
-<div class="container mt-5 mb-5">
-    <div class="row justify-content-center">
-        <div class="col-md-6">
-            <div class="card shadow rounded">
-                <div class="card-header bg-gradient text-black">
-                    <h4 class="mb-0">User Registration</h4>
+
+<body class="bg-dark">
+
+    <div class="sufee-login d-flex align-content-center flex-wrap">
+        <div class="container">
+            <div class="login-content">
+                <div class="login-logo">
+                    <a asp-controller="Home" asp-action="Dashboard">
+                        <img class="align-content" src="~/images/logonew-removebg.png" width="100px" height="100px" alt="">
+                    </a>
                 </div>
-                <div class="card-body">
+                <div class="login-form">
                     <form asp-action="Register" method="post">
-                        <div class="mb-3">
+                        <div class="form-group">
                             <label class="form-label">Full Name</label>
                             <input asp-for="FullName" class="form-control" />
                             <span asp-validation-for="FullName" class="text-danger"></span>
                         </div>
-                        <div class="mb-3">
+                        <div class="form-group">
                             <label class="form-label">Email</label>
                             <input asp-for="Email" class="form-control" />
                             <span asp-validation-for="Email" class="text-danger"></span>
                         </div>
-                        <div class="mb-3">
+                        <div class="form-group">
                             <label class="form-label">Password</label>
                             <input asp-for="Password" type="password" class="form-control" />
                             <span asp-validation-for="Password" class="text-danger"></span>
                         </div>
-                        <div class="mb-3">
+                        <div class="form-group">
                             <label class="form-label">Contact Number</label>
                             <input asp-for="Mobile" class="form-control" />
-
                             <span asp-validation-for="Mobile" class="text-danger"></span>
                         </div>
-                        <div class="d-grid">
-                            <button type="submit" class="btn btn-success">Register</button>
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox"> Agree the terms and policy
+                            </label>
                         </div>
-                        <br />
-                        <div class="d-flex justify-content-center align-items-center">
-                            <span class="me-2">Already have an account!</span>
-                            <a class="text-decoration-none text-primary" asp-controller="Account" asp-action="Login">Login</a>
-                        </div>                    
+                        <button type="submit" class="btn btn-success">Login</button>
+                        <div class="register-link m-t-15 text-center">
+                            <p>Already have account ? <a asp-controller="Account" asp-action="Login"> Login</a></p>
+                        </div>
                     </form>
                 </div>
             </div>
         </div>
     </div>
-</div>
-
-
+</body>

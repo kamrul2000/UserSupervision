@@ -34,15 +34,14 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Account}/{action=Login}/{id?}");
+    pattern: "{controller=Home}/{action=Dashboard}/{id?}");
 
 app.Run();
 
 
 
 /*
- * 
- * ✅ To Add a Migration:
+✅ To Add a Migration:
     Add-Migration AddNameTable -Context AppDbContext
 ✅ To Apply the Migration (Update the DB):
 Update-Database -Context AppDbContext

@@ -94,12 +94,13 @@ namespace UserSupervision.Controllers
             return RedirectToAction("Login");
         }
 
-        [HttpPost]
+        [HttpGet]
         public async Task<IActionResult> Logout()
         {
             await HttpContext.SignOutAsync("MyCookieAuth");
             return RedirectToAction("Login", "Account");
         }
+
 
 
         private async Task<int> GetDefaultSubscriptionId()
@@ -108,7 +109,7 @@ namespace UserSupervision.Controllers
                 .Where(s => s.IsActive)
                 .OrderBy(s => s.Id)
                 .FirstOrDefaultAsync();
-
+    
             if (subscription == null)
                 throw new Exception("No active subscription found");
 

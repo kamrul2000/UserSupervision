@@ -1,43 +1,57 @@
 ﻿@{
+    Layout = "_AdminLayout";
     ViewBag.Title = "Login";
 }
 
-<div class="container mt-5">
-    <div class="row justify-content-center">
-        <div class="col-md-6">
-            <div class="card shadow-lg">
-                <div class="card-header bg-gradient text-black">
-                    <h4 class="mb-0">Login</h4>
+<body class="bg-dark">
+
+    <div class="sufee-login d-flex align-content-center flex-wrap mt-0">
+        <div class="container">
+            <div class="login-content">
+                <div class="login-logo">
+                    <a asp-controller="Home" asp-action="Dashboard">
+                        <img class="align-content" src="~/images/logonew-removebg.png" width="100px" height="100px" alt="">
+                    </a>
                 </div>
-                <div class="card-body">
+                <div class="login-form">
                     <form method="post" asp-action="Login">
-                        <div class="mb-3">
+                        <div class="form-group">
                             <label for="email" class="form-label">Email address</label>
                             <input type="email" class="form-control" id="email" name="email" required placeholder="Enter your email" />
                         </div>
-                        <div class="mb-3">
+                        <div class="form-group">
                             <label for="password" class="form-label">Password</label>
                             <input type="password" class="form-control" id="password" name="password" required placeholder="Enter your password" />
-                        </div>                                         
-                        <div class="d-grid">
-                            <button type="submit" class="btn btn-success">Login</button>
                         </div>
-                        <br />
-                        <div class="d-flex justify-content-center align-items-center">
-                            <span class="me-2">Not yet have an account?</span>
-                            <a class="text-decoration-none text-primary" asp-controller="Account" asp-action="Register">Register</a>
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox"> Remember Me
+                            </label>
+                            <label class="pull-right">
+                                <a href="#">Forgotten Password?</a>
+                            </label>
+
                         </div>
-
-
+                        <button type="submit" class="btn btn-success">Login</button>
+                        <div class="social-login-content">                          
+                        </div>
+                        <div class="register-link m-t-15 text-center">
+                            <p>Don't have account ? <a asp-controller="Account" asp-action="Register"> Register</a></p>
+                        </div>
                         @if (ViewBag.Error != null)
                         {
                             <div class="alert alert-danger mt-3" role="alert">
                                 @ViewBag.Error
                             </div>
                         }
+
                     </form>
                 </div>
             </div>
         </div>
     </div>
-</div>
+
+   
+
+</body>
+
