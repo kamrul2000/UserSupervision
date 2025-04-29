@@ -4,51 +4,50 @@
     ViewBag.Title = "User Registration";
 }
 
-
-<body class="bg-dark">
-
-    <div class="sufee-login d-flex align-content-center flex-wrap">
-        <div class="container">
-            <div class="login-content">
-                <div class="login-logo">
-                    <a asp-controller="Home" asp-action="Dashboard">
-                        <img class="align-content" src="~/images/logonew-removebg.png" width="100px" height="100px" alt="">
-                    </a>
-                </div>
-                <div class="login-form">
-                    <form asp-action="Register" method="post">
-                        <div class="form-group">
-                            <label class="form-label">Full Name</label>
-                            <input asp-for="FullName" class="form-control" />
-                            <span asp-validation-for="FullName" class="text-danger"></span>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Email</label>
-                            <input asp-for="Email" class="form-control" />
-                            <span asp-validation-for="Email" class="text-danger"></span>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Password</label>
-                            <input asp-for="Password" type="password" class="form-control" />
-                            <span asp-validation-for="Password" class="text-danger"></span>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Contact Number</label>
-                            <input asp-for="Mobile" class="form-control" />
-                            <span asp-validation-for="Mobile" class="text-danger"></span>
-                        </div>
-                        <div class="checkbox">
-                            <label>
-                                <input type="checkbox"> Agree the terms and policy
-                            </label>
-                        </div>
-                        <button type="submit" class="btn btn-success">Login</button>
-                        <div class="register-link m-t-15 text-center">
-                            <p>Already have account ? <a asp-controller="Account" asp-action="Login"> Login</a></p>
-                        </div>
-                    </form>
-                </div>
-            </div>
+<body>
+    <!-- [ Pre-loader ] start -->
+    <div class="loader-bg">
+        <div class="loader-track">
+            <div class="loader-fill"></div>
         </div>
     </div>
+    <!-- [ Pre-loader ] End -->
+
+    <div class="auth-main">
+        <div class="auth-wrapper v3">
+            <div class="auth-form">              
+                <div class="card my-5">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-end mb-4">
+                            <h3 class="mb-0"><b>Sign up</b></h3>
+                            <a href="#" class="link-primary">Already have an account?</a>
+                        </div> 
+                        <form asp-action="Register" method="post">
+                        <div class="form-group mb-3">
+                            <label class="form-label">Full Name</label>
+                            <input type="text" class="form-control" placeholder="Full Name" name="FullName">
+                        </div>
+                        <div class="form-group mb-3">
+                            <label class="form-label">Email Address*</label>
+                            <input type="email" class="form-control" placeholder="Email Address" name="Email">
+                        </div>
+                        <div class="form-group mb-3">
+                            <label class="form-label">Password</label>
+                            <input type="password" class="form-control" placeholder="Password" name="Password">
+                        </div>
+                            <div class="form-group mb-3">
+                                <label class="form-label">Contact Number</label>
+                                <input type="password" class="form-control" placeholder="Contact Number" name="Mobile">
+                            </div>
+                        <p class="mt-4 text-sm text-muted">By Signing up, you agree to our <a href="#" class="text-primary"> Terms of Service </a> and <a href="#" class="text-primary"> Privacy Policy</a></p>
+                        <div class="d-grid mt-3">
+                            <button type="submit" class="btn btn-primary">Create Account</button>
+                        </div> 
+                        </form>
+                    </div>
+                </div>              
+            </div>
+        </div>
+    </div>   
 </body>
+
