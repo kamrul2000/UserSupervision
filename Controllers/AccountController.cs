@@ -43,7 +43,11 @@ namespace UserSupervision.Controllers
                 var identity = new ClaimsIdentity(claims, "MyCookieAuth");
                 var principal = new ClaimsPrincipal(identity);
 
-                await HttpContext.SignInAsync("MyCookieAuth", principal);
+                await HttpContext.SignInAsync("MyCookieAuth", new ClaimsPrincipal(identity),
+    new AuthenticationProperties
+    {
+        IsPersistent = false 
+    });
 
                 return RedirectToAction("Index", "Dashboard");
             }
