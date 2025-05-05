@@ -73,21 +73,10 @@
                         </li>
 
                         <li class="pc-item pc-hasmenu">
-                            <a href="#!" class="pc-link">
+                            <a asp-controller="Dashboard" asp-action="BillIndex" class="pc-link">
                                 <span class="pc-micon"><i class="ti ti-report-money"></i> </span>
                                 <span class="pc-mtext">Bill Generate</span>
-                                <span class="pc-arrow"><i data-feather="chevron-right"></i></span>
-                            </a>
-                            <ul class="pc-submenu">
-                                @foreach (var user in _context.Users.ToList())
-                                {
-                                    <li class="pc-item">
-                                        <a class="pc-link" asp-controller="Dashboard" asp-action="Details" asp-route-id="@user.Id">
-                                            <i class="ti ti-user"></i>@user.FullName
-                                        </a>
-                                    </li>
-                                }
-                            </ul>
+                           </a>                           
                         </li>
                     }
                 </ul>

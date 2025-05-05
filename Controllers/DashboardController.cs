@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
 using UserSupervision.Data;
 
 namespace UserSupervision.Controllers
@@ -9,10 +10,13 @@ namespace UserSupervision.Controllers
     public class DashboardController : Controller
     {
         private readonly AccuStockDbContext _context;
+        private readonly AppDbContext _appDbContext;
 
-        public DashboardController(AccuStockDbContext context)
+
+        public DashboardController(AccuStockDbContext context, AppDbContext appDbContext)
         {
             _context = context;
+            _appDbContext = appDbContext;
         }
 
         public async Task<IActionResult> Index()
@@ -30,6 +34,15 @@ namespace UserSupervision.Controllers
                 Console.WriteLine(ex);
                 throw ex;
             }
+        }
+
+        [Authorize]
+        public async Task<IActionResult> BillIndex()
+        {
+            var user = await _context.Users
+            .Where(u => u.BranchId == null)           
+            .ToListAsync();
+            return View(user);
         }
 
 

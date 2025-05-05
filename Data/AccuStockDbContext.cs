@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using UserSupervision.Models;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace UserSupervision.Data
 {
@@ -10,5 +11,6 @@ namespace UserSupervision.Data
 
         public DbSet<User> Users { get; set; }
         public DbSet<Subscription> Subscriptions { get; set; }
+        
     }
 }
