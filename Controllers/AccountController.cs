@@ -31,11 +31,10 @@ namespace UserSupervision.Controllers
         {
             return View();
         }
-
         [HttpPost]
         public async Task<IActionResult> Login(string email, string password)
         {
-            
+
             var user = await _context.Users
                .FirstOrDefaultAsync(u => u.Email == email && u.Password == password);
 
@@ -54,7 +53,7 @@ namespace UserSupervision.Controllers
                 await HttpContext.SignInAsync("MyCookieAuth", new ClaimsPrincipal(identity),
                 new AuthenticationProperties
                 {
-                    IsPersistent = false 
+                    IsPersistent = false
                 });
 
                 return RedirectToAction("Dashboard", "Home");
@@ -63,6 +62,7 @@ namespace UserSupervision.Controllers
             ViewBag.Error = "Invalid email or password.";
             return View();
         }
+
 
         [HttpGet]
         public IActionResult Register()
