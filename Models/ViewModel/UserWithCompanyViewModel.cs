@@ -1,0 +1,8 @@
+﻿namespace UserSupervision.Models
+{
+    public class UserWithCompanyViewModel
+    {
+        public User User { get; set; }
+        public string CompanyName { get; set; }
+    }
+}

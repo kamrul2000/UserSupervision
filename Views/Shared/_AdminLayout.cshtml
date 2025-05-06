@@ -2,17 +2,13 @@
 
 <!DOCTYPE html>
 <html lang="en">
-<!-- [Head] start -->
-
 <head>
   <title>Home</title>
-  <!-- [Meta] -->
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-
   <!-- [Favicon] icon -->
-  <link rel="icon" href="~/images/logonew-removebg.png" type="image/x-icon"> <!-- [Google Font] Family -->
+<link rel="icon" href="~/images/logonew-removebg.png" type="image/x-icon"> <!-- [Google Font] Family -->
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700&display=swap" id="main-font-link">
 <!-- [Tabler Icons] https://tablericons.com -->
 <link rel="stylesheet" href="~/assets/fonts/tabler-icons.min.css" >
@@ -26,12 +22,7 @@
 <link rel="stylesheet" href="~/assets/css/style.css" id="main-style-link" >
 <link rel="stylesheet" href="~/assets/css/style-preset.css" >
  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" />
-
-
 </head>
-<!-- [Head] end -->
-<!-- [Body] Start -->
-
 <body data-pc-preset="preset-1" data-pc-direction="ltr" data-pc-theme="light">
   <!-- [ Pre-loader ] start -->
 <div class="loader-bg">
@@ -39,8 +30,6 @@
     <div class="loader-fill"></div>
   </div>
 </div>
-<!-- [ Pre-loader ] End -->
- <!-- [ Sidebar Menu ] start -->
 <nav class="pc-sidebar">
   <div class="navbar-wrapper">
     <div class="m-header">
@@ -84,9 +73,8 @@
 
   </div>
 </nav>
-<!-- [ Sidebar Menu ] end --> <!-- [ Header Topbar ] start -->
 <header class="pc-header">
-  <div class="header-wrapper"> <!-- [Mobile Media Block] start -->
+  <div class="header-wrapper"> 
 <div class="me-auto pc-mob-drp">
   <ul class="list-unstyled">
     <!-- ======= Menu collapse Icon ===== -->
@@ -114,20 +102,8 @@
     </li>    
   </ul>
 </div>
-<!-- [Mobile Media Block end] -->
 <div class="ms-auto">
-  <ul class="list-unstyled">
-    <li class="dropdown pc-h-item">
-      <a
-        class="pc-head-link dropdown-toggle arrow-none me-0"
-        data-bs-toggle="dropdown"
-        href="#"
-        role="button"
-        aria-haspopup="false"
-        aria-expanded="false"
-      >
-      </a>     
-    </li>
+  <ul class="list-unstyled">   
     <li class="dropdown pc-h-item header-user-profile">
       <a
         class="pc-head-link dropdown-toggle arrow-none me-0"
@@ -182,27 +158,9 @@
 </div>
  </div>
 </header>
-<!-- [ Header ] end -->
-
-
-
-  <!-- [ Main Content ] start -->
     <div>
         @RenderBody()
     </div>
-
-  <!-- [ Main Content ] end -->
-  <footer class="pc-footer">
-    <div class="footer-wrapper container-fluid">
-      <div class="row">
-        <div class="col-sm my-1">
-          <p class="m-0"
-            > Copyright 2025</p
-          >       
-      </div>
-    </div>
-  </footer>
-
   <!-- [Page Specific JS] start -->
   <script src="~/assets/js/plugins/apexcharts.min.js"></script>
   <script src="~/assets/js/pages/dashboard-default.js"></script>
@@ -242,11 +200,5 @@
     <!-- DataTables JS (after jQuery) -->
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
     @RenderSection("Scripts", required: false)
-
-    
-
-
 </body>
-<!-- [Body] end -->
-
 </html>

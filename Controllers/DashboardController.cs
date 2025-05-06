@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 using UserSupervision.Data;
+using UserSupervision.Models.ViewModel;
+using UserSupervision.Models;
 
 namespace UserSupervision.Controllers
 {
@@ -39,11 +41,21 @@ namespace UserSupervision.Controllers
         [Authorize]
         public async Task<IActionResult> BillIndex()
         {
-            var user = await _context.Users
-            .Where(u => u.BranchId == null)           
-            .ToListAsync();
-            return View(user);
+            var usersWithCompanies = await _context.Users
+                .Where(u => u.BranchId == null)
+                .Select(u => new UserWithCompanyViewModel
+                {
+                    User = u,
+                    CompanyName = _context.Companies
+                        .Where(c => c.SubscriptionId == u.SubscriptionId)
+                        .Select(c => c.Name)
+                        .FirstOrDefault()
+                })
+                .ToListAsync();
+
+            return View(usersWithCompanies);
         }
+
 
 
     }

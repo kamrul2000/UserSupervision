@@ -1,53 +1,47 @@
 ﻿@model UserSupervision.Models.ViewModel.RegisterViewModel;
 @{
-    Layout = "_AdminLayout";
+    Layout = "_LoginLayout";
     ViewBag.Title = "User Registration";
 }
 
 <body>
-    <!-- [ Pre-loader ] start -->
     <div class="loader-bg">
         <div class="loader-track">
             <div class="loader-fill"></div>
         </div>
     </div>
-    <!-- [ Pre-loader ] End -->
 
-    <div class="auth-main">
-        <div class="auth-wrapper v3">
-            <div class="auth-form">              
-                <div class="card my-5">
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between align-items-end mb-4">
-                            <h3 class="mb-0"><b>Sign up</b></h3>
-                            <a asp-controller="Account" asp-action="Login" class="link-primary">Already have an account?</a>
-                        </div> 
-                        <form asp-action="Register" method="post">
-                        <div class="form-group mb-3">
-                            <label class="form-label">Full Name</label>
-                            <input type="text" class="form-control" placeholder="Full Name" name="FullName">
-                        </div>
-                        <div class="form-group mb-3">
-                            <label class="form-label">Email Address*</label>
-                            <input type="email" class="form-control" placeholder="Email Address" name="Email">
-                        </div>
-                        <div class="form-group mb-3">
-                            <label class="form-label">Password</label>
-                            <input type="password" class="form-control" placeholder="Password" name="Password">
-                        </div>
-                            <div class="form-group mb-3">
-                                <label class="form-label">Contact Number</label>
-                                <input type="password" class="form-control" placeholder="Contact Number" name="Mobile">
-                            </div>
-                        <p class="mt-4 text-sm text-muted">By Signing up, you agree to our <a href="#" class="text-primary"> Terms of Service </a> and <a href="#" class="text-primary"> Privacy Policy</a></p>
-                        <div class="d-grid mt-3">
-                            <button type="submit" class="btn btn-primary">Create Account</button>
-                        </div> 
-                        </form>
+    <div class="container vh-100 d-flex justify-content-center align-items-center">
+        <div class="card shadow p-4" style="width: 100%; max-width: 400px;">
+            <div class="card-body">
+                <h2 class="text-center mb-4">Create Account</h2>
+                <form asp-action="Register" method="post">
+                    <div class="form-group mb-3">
+                        <label class="form-label">Full Name</label>
+                        <input type="text" class="form-control" placeholder="Full Name" name="FullName" required>
                     </div>
-                </div>              
+                    <div class="form-group mb-3">
+                        <label class="form-label">Email Address*</label>
+                        <input type="email" class="form-control" placeholder="Email Address" name="Email" required>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label class="form-label">Password</label>
+                        <input type="password" class="form-control" placeholder="Password" name="Password" required>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label class="form-label">Contact Number</label>
+                        <input type="text" class="form-control" placeholder="Contact Number" name="Mobile">
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <a asp-controller="Account" asp-action="Login" class="link-primary">Already have an account?</a>
+                    </div>
+
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary">Create Account</button>
+                    </div>
+                </form>
             </div>
         </div>
-    </div>   
+    </div>
 </body>
-

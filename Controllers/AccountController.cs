@@ -6,6 +6,9 @@ using Microsoft.EntityFrameworkCore;
 using UserSupervision.Models;
 using UserSupervision.Models.ViewModel;
 using UserSupervision.Data;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
+
 
 namespace UserSupervision.Controllers
 {
@@ -13,11 +16,14 @@ namespace UserSupervision.Controllers
     {
         private readonly AccuStockDbContext _context;
         private readonly AppDbContext _appDbContext;
+        
+
 
         public AccountController(AccuStockDbContext context, AppDbContext appDbContext)
         {
             _context = context;
             _appDbContext = appDbContext;
+            
         }
 
         [HttpGet]
@@ -29,27 +35,29 @@ namespace UserSupervision.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(string email, string password)
         {
-            var user = await _appDbContext.SupervisionTable
-                .FirstOrDefaultAsync(u => u.Email == email && u.Password == password);
+            
+            var user = await _context.Users
+               .FirstOrDefaultAsync(u => u.Email == email && u.Password == password);
+
 
             if (user != null)
             {
                 var claims = new List<Claim>
                 {
-                    new Claim(ClaimTypes.Name, user.Name),
-                    new Claim(ClaimTypes.Email, user.Email)
+                 new Claim(ClaimTypes.Name, user.FullName),
+                 new Claim(ClaimTypes.Email, user.Email)
                 };
 
                 var identity = new ClaimsIdentity(claims, "MyCookieAuth");
                 var principal = new ClaimsPrincipal(identity);
 
                 await HttpContext.SignInAsync("MyCookieAuth", new ClaimsPrincipal(identity),
-    new AuthenticationProperties
-    {
-        IsPersistent = false 
-    });
+                new AuthenticationProperties
+                {
+                    IsPersistent = false 
+                });
 
-                return RedirectToAction("Index", "Dashboard");
+                return RedirectToAction("Dashboard", "Home");
             }
 
             ViewBag.Error = "Invalid email or password.";
@@ -103,9 +111,7 @@ namespace UserSupervision.Controllers
         {
             await HttpContext.SignOutAsync("MyCookieAuth");
             return RedirectToAction("Login", "Account");
-        }
-
-
+        }     
 
         private async Task<int> GetDefaultSubscriptionId()
         {
