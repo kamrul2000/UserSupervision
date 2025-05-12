@@ -35,15 +35,15 @@ namespace UserSupervision.Controllers
         public async Task<IActionResult> Login(string email, string password)
         {
 
-            var user = await _context.Users
-               .FirstOrDefaultAsync(u => u.Email == email && u.Password == password);
+            // var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email && u.Password == password);
+            var user = await _appDbContext.SupervisionTable.FirstOrDefaultAsync(u => u.Email == email && u.Password == password);
 
 
             if (user != null)
             {
                 var claims = new List<Claim>
                 {
-                 new Claim(ClaimTypes.Name, user.FullName),
+                 new Claim(ClaimTypes.Name, user.Name),
                  new Claim(ClaimTypes.Email, user.Email)
                 };
 
