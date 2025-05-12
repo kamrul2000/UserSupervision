@@ -35,15 +35,15 @@ namespace UserSupervision.Controllers
         public async Task<IActionResult> Login(string email, string password)
         {
 
-            var user = await _context.Users
-               .FirstOrDefaultAsync(u => u.Email == email && u.Password == password);
+            var user = await _appDbContext.SupervisionTable.FirstOrDefaultAsync(u => u.Email == email && u.Password == password);
+
 
 
             if (user != null)
             {
                 var claims = new List<Claim>
                 {
-                 new Claim(ClaimTypes.Name, user.FullName),
+                 new Claim(ClaimTypes.Name, user.Name),
                  new Claim(ClaimTypes.Email, user.Email)
                 };
 
@@ -62,50 +62,7 @@ namespace UserSupervision.Controllers
             ViewBag.Error = "Invalid email or password.";
             return View();
         }
-
-
-        [HttpGet]
-        public IActionResult Register()
-        {
-            return View();
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> Register(RegisterViewModel model)
-        {
-            if (!ModelState.IsValid)
-                return View(model);
-
-            if (await _context.Users.AnyAsync(u => u.Email == model.Email))
-            {
-                ModelState.AddModelError("Email", "Email already exists.");
-                return View(model);
-            }
-
-            var subscriptionId = await GetDefaultSubscriptionId();
-
-            var user = new User
-            {
-                FullName = model.FullName,
-                Email = model.Email,
-                Password = model.Password,
-                Mobile = model.Mobile,
-                RoleId = 1,
-                BranchId = null,
-                Status = true,
-                SubscriptionId = subscriptionId,
-                CreatedAt = DateTime.Now,
-                UpdatedAt = DateTime.Now
-               
-            };
-
-            _context.Users.Add(user); 
-
-            await _context.SaveChangesAsync();
-
-            return RedirectToAction("Login");
-        }
-
+        
         [HttpGet]
         public async Task<IActionResult> Logout()
         {

@@ -49,12 +49,18 @@ namespace UserSupervision.Controllers
                     CompanyName = _context.Companies
                         .Where(c => c.SubscriptionId == u.SubscriptionId)
                         .Select(c => c.Name)
-                        .FirstOrDefault()
+                        .FirstOrDefault(),
+                    PaymentStatus = _context.UserBillStatuses
+                        .Where(b => b.SubscriptionId == u.SubscriptionId)
+                        .OrderByDescending(b => b.BillDate)
+                        .Select(b => b.PaymentStatus) 
+                .FirstOrDefault() ?? "Unpaid" 
                 })
                 .ToListAsync();
 
             return View(usersWithCompanies);
         }
+
 
 
 

@@ -4,5 +4,7 @@
     {
         public User User { get; set; }
         public string CompanyName { get; set; }
+        public string PaymentStatus { get; set; } 
+
     }
 }

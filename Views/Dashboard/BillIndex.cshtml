@@ -9,7 +9,7 @@
             <div class="col-sm-12">
                 <div class="card">
                     <div class="card-body">
-                        <a href="#" class="text-secondary f-w-400 float-end" data-bs-toggle="modal" data-bs-target="#AddBillModal">Add Bill Generate</a>
+                        <a href="#" class="text-secondary f-w-400 float-end" data-bs-toggle="modal" data-bs-target="#AddBillModal">Add New Bill Generate</a>
                         <br />
                         <div class="dt-responsive">
                             <table id="dom-jqry" class="table table-striped table-bordered nowrap">
@@ -20,6 +20,7 @@
                                         <th class="text-center">Full Name</th>
                                         <th class="text-center">Bill Amount</th>
                                         <th class="text-center">Payment Status</th>
+                                        <th class="text-center">Send Email</th>
                                         <th class="text-center">Company Name</th>
                                         <th class="text-center">Day</th>
 
@@ -36,15 +37,28 @@
                                             <td class="text-center">@user.User.FullName</td>
                                             <td class="text-center">N/A</td>
                                             <td class="text-center">
-                                                @if (user.User.Status)
+                                                @switch (user.PaymentStatus?.ToLower()) 
                                                 {
-                                                    <span class="badge bg-success text-white">Paid</span>
-                                                }
-                                                else
-                                                {
-                                                    <span class="badge bg-danger text-white">Unpaid</span>
+                                                    case "paid":
+                                                        <span class="badge bg-success text-white">Paid</span>
+                                                        break;
+                                                    case "unpaid":
+                                                        <span class="badge bg-danger text-white">Unpaid</span>
+                                                        break;
+                                                    case "due":
+                                                        <span class="badge bg-warning text-dark">Due</span>
+                                                        break;
+                                                    default:
+                                                        <span class="badge bg-secondary text-white">@user.PaymentStatus</span>
+                                                        break;
                                                 }
                                             </td>
+                                            <td class="text-center">
+                                                <a href="mailto:@user.User.Email" class="btn btn-outline-primary btn-sm" title="Send Email">
+                                                    <i class="ti ti-mail"></i>
+                                                </a>
+                                            </td>
+
                                             <td class="text-center">@user.CompanyName</td>
                                             <td class="text-center">@((DateTime.Now.Date - user.User.CreatedAt.Date).Days)</td>
                                         </tr>
@@ -85,24 +99,49 @@
                             <th class="text-center">Full Name</th>
                             <th class="text-center">Created Date</th>
                             <th class="text-center">Amount</th>
+                            <th class="text-center">Bill Generated On</th>
+                            <th class="text-center">From Date</th>
+                            <th class="text-center">To Date</th>
                             <th class="text-center">Days Since Created</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach (var user in Model)
                         {
+
                             <tr>
                                 <td class="text-center">@user.User.FullName</td>
                                 <td class="text-center">@user.User.CreatedAt.ToString("yyyy-MM-dd")</td>
-                                <td class="text-center">N/A</td>
+                                <td class="text-center">
+                                    <input type="number" class="form-control amount-input"
+                                           placeholder="Enter amount" />
+                                </td>
+                                <td class="text-center">@DateTime.Now.ToString("yyyy-MM-dd")</td>
+                                <td class="text-center">
+                                    <input type="date" class="form-control from-date" />
+                                </td>
+                                <td class="text-center">
+                                    <input type="date" class="form-control to-date" />
+                                </td>
                                 <td class="text-center">@((DateTime.Now.Date - user.User.CreatedAt.Date).Days)</td>
                             </tr>
                         }
                     </tbody>
                 </table>
-
-
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="saveBills">Save Bills</button>
             </div>
         </div>
     </div>
 </div>
+
+<script>
+    $(document).ready(function() {
+        $('#saveBills').click(function() {
+            // Implement your save logic here
+            alert('Bill data saved successfully!');
+        });
+    });
+</script>
