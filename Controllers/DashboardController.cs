@@ -41,23 +41,31 @@ namespace UserSupervision.Controllers
         [Authorize]
         public async Task<IActionResult> BillIndex()
         {
-            var usersWithCompanies = await _context.Users
+            var users = await _context.Users
                 .Where(u => u.BranchId == null)
-                .Select(u => new UserWithCompanyViewModel
+                .Select(u => new
                 {
-                    User = u,
-                    CompanyName = _context.Companies
-                        .Where(c => c.SubscriptionId == u.SubscriptionId)
-                        .Select(c => c.Name)
-                        .FirstOrDefault(),
-
-                    PaymentStatus = _context.UserBillStatuses
-                        .Where(b => b.SubscriptionId == u.SubscriptionId)
-                        .OrderByDescending(b => b.BillDate)
-                        .Select(b => b.PaymentStatus)
-                        .FirstOrDefault() ?? "Unpaid"
+                User = u,
+                CompanyName = _context.Companies
+                .Where(c => c.SubscriptionId == u.SubscriptionId)
+                .Select(c => c.Name)
+                .FirstOrDefault()
                 })
                 .ToListAsync();
+
+                            var userBillStatuses = await _appDbContext.UserBillStatuses
+                                .ToListAsync();
+
+                            var usersWithCompanies = users.Select(u => new UserWithCompanyViewModel
+                            {
+                                User = u.User,
+                                CompanyName = u.CompanyName,
+                                PaymentStatus = userBillStatuses
+                                    .Where(b => b.SubscriptionId == u.User.SubscriptionId)
+                                    .OrderByDescending(b => b.BillDate)
+                                    .Select(b => b.PaymentStatus)
+                                    .FirstOrDefault() ?? "Unpaid"
+                            }).ToList();
 
             return View(usersWithCompanies);
         }

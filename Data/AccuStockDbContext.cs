@@ -12,7 +12,6 @@ namespace UserSupervision.Data
         public DbSet<User> Users { get; set; }
         public DbSet<Subscription> Subscriptions { get; set; }
         public DbSet<Company> Companies { get; set; }
-        public DbSet<UserBillStatus> UserBillStatuses { get; set; }
 
     }
 }

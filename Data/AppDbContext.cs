@@ -9,5 +9,6 @@ namespace UserSupervision.Data
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
         public DbSet<SupervisionUser> SupervisionTable { get; set; }
+        public DbSet<UserBillStatus> UserBillStatuses { get; set; }
     }
 }
