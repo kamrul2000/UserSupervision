@@ -35,6 +35,8 @@ namespace UserSupervision.Controllers
         public async Task<IActionResult> Login(string email, string password)
         {
 
+
+            // var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email && u.Password == password);
             var user = await _appDbContext.SupervisionTable.FirstOrDefaultAsync(u => u.Email == email && u.Password == password);
 
 

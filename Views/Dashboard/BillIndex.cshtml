@@ -37,22 +37,28 @@
                                             <td class="text-center">@user.User.FullName</td>
                                             <td class="text-center">N/A</td>
                                             <td class="text-center">
-                                                @switch (user.PaymentStatus?.ToLower()) 
+                                                @{
+                                                    var status = user.PaymentStatus?.ToLower();
+                                                }
+
+                                                @if (status == "paid")
                                                 {
-                                                    case "paid":
-                                                        <span class="badge bg-success text-white">Paid</span>
-                                                        break;
-                                                    case "unpaid":
-                                                        <span class="badge bg-danger text-white">Unpaid</span>
-                                                        break;
-                                                    case "due":
-                                                        <span class="badge bg-warning text-dark">Due</span>
-                                                        break;
-                                                    default:
-                                                        <span class="badge bg-secondary text-white">@user.PaymentStatus</span>
-                                                        break;
+                                                    <span class="badge bg-success text-white">Paid</span>
+                                                }
+                                                else if (status == "unpaid")
+                                                {
+                                                    <span class="badge bg-danger text-white">Unpaid</span>
+                                                }
+                                                else if (status == "due")
+                                                {
+                                                    <span class="badge bg-warning text-dark">Due</span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="badge bg-secondary text-white">@user.PaymentStatus</span>
                                                 }
                                             </td>
+
                                             <td class="text-center">
                                                 <a href="mailto:@user.User.Email" class="btn btn-outline-primary btn-sm" title="Send Email">
                                                     <i class="ti ti-mail"></i>
@@ -140,7 +146,6 @@
 <script>
     $(document).ready(function() {
         $('#saveBills').click(function() {
-            // Implement your save logic here
             alert('Bill data saved successfully!');
         });
     });
