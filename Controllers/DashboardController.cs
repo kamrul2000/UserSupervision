@@ -26,23 +26,24 @@ namespace UserSupervision.Controllers
             try
             {
                 var usersWithNoBranch = await _context.Users
-                .Where(u => u.BranchId == null)
-                .ToListAsync();
+                    .Where(u => u.BranchId == null && u.RoleId == 1)
+                    .ToListAsync();
 
                 return View(usersWithNoBranch);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Console.WriteLine(ex);
-                throw ex;
+                throw;
             }
         }
+
 
         [Authorize]
         public async Task<IActionResult> BillIndex()
         {
             var users = await _context.Users
-                .Where(u => u.BranchId == null)
+                .Where(u => u.BranchId == null && u.RoleId == 1)
                 .Select(u => new
                 {
                 User = u,
@@ -56,16 +57,21 @@ namespace UserSupervision.Controllers
                             var userBillStatuses = await _appDbContext.UserBillStatuses
                                 .ToListAsync();
 
-                            var usersWithCompanies = users.Select(u => new UserWithCompanyViewModel
-                            {
-                                User = u.User,
-                                CompanyName = u.CompanyName,
-                                PaymentStatus = userBillStatuses
-                                    .Where(b => b.SubscriptionId == u.User.SubscriptionId)
-                                    .OrderByDescending(b => b.BillDate)
-                                    .Select(b => b.PaymentStatus)
-                                    .FirstOrDefault() ?? "Unpaid"
-                            }).ToList();
+            var usersWithCompanies = users.Select(u =>
+            {
+                var latestBill = userBillStatuses
+                    .Where(b => b.SubscriptionId == u.User.SubscriptionId && b.UserId == u.User.Id)
+                    .OrderByDescending(b => b.BillDate)
+                    .FirstOrDefault();
+
+                return new UserWithCompanyViewModel
+                {
+                    User = u.User,
+                    CompanyName = u.CompanyName,
+                    PaymentStatus = latestBill?.PaymentStatus ?? "Unpaid",
+                    Amount = latestBill?.Amount ?? 0 
+                };
+            }).ToList();
 
             return View(usersWithCompanies);
         }
@@ -76,36 +82,78 @@ namespace UserSupervision.Controllers
         {
             try
             {
-                var bill = new UserBillStatus
+                var previousDueBills = await _appDbContext.UserBillStatuses
+                    .Where(b => b.UserId == userId &&
+                                b.SubscriptionId == subscriptionId &&
+                                b.PaymentStatus == "Due")
+                    .ToListAsync();
+
+                foreach (var bill in previousDueBills)
                 {
+                    bill.PaymentStatus = "Unpaid";
+                }
+
+                var newBill = new UserBillStatus
+                {
+                    UserId = userId,
                     SubscriptionId = subscriptionId,
                     Amount = amount,
                     BillDate = DateTime.Now,
                     DueDate = toDate,
-                    PaymentStatus = "Due"  
+                    PaymentStatus = "Due",
+                    InvoiceNumber = $"B-{subscriptionId}{DateTime.Now:dd}{DateTime.Now:MM}{DateTime.Now:yyyy}"
                 };
 
-                _appDbContext.UserBillStatuses.Add(bill);
+                _appDbContext.UserBillStatuses.Add(newBill);
                 await _appDbContext.SaveChangesAsync();
 
-                var userBillStatus = await _appDbContext.UserBillStatuses
-                    .Where(b => b.SubscriptionId == subscriptionId && b.PaymentStatus == "Unpaid")
-                    .OrderByDescending(b => b.BillDate)
-                    .FirstOrDefaultAsync();
-
-                if (userBillStatus != null)
-                {
-                    userBillStatus.PaymentStatus = "Unpaid";  
-                    await _appDbContext.SaveChangesAsync();
-                }
-
-                return Json(new { success = true }); 
+                return RedirectToAction("BillIndex");
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex);  
-                return Json(new { success = false, message = ex.Message }); 
+                ModelState.AddModelError("", ex.Message);
+                return View("BillIndex"); 
+
             }
+        }
+
+        public async Task<IActionResult> BillPay()
+        {
+            var bills = await _appDbContext.UserBillStatuses
+                .Where(b => b.PaymentStatus == "Due" || b.PaymentStatus == "Unpaid")
+                .ToListAsync();
+
+            return View(bills);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> PayBill(BillPayViewModel model)
+        {
+            var bill = await _appDbContext.UserBillStatuses
+                .FirstOrDefaultAsync(b => b.InvoiceNumber == model.InvoiceNumber);
+
+            if (bill == null)
+            {
+                ModelState.AddModelError("", "Bill not found");
+                return View("BillPay");
+            }
+
+            var billPay = new BillPay
+            {
+                InvoiceNumber = model.InvoiceNumber,
+                SubscriptionId = model.SubscriptionId,
+                AmountPaid = model.AmountPaid,
+                MoneyReceiptOrCheckNumber = model.MoneyReceiptOrCheckNumber,
+                Status = model.AmountPaid >= bill.Amount ? "Paid" : "Partial Paid",
+                PaymentDate = DateTime.Now
+            };
+
+            bill.PaymentStatus = billPay.Status;
+
+            _appDbContext.BillPays.Add(billPay);
+            await _appDbContext.SaveChangesAsync();
+
+            return RedirectToAction("BillPay");
         }
 
 

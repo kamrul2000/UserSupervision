@@ -33,7 +33,7 @@
                                         <tr>
                                             <td class="text-center">@countSL</td>
                                             <td class="text-center">@user.User.FullName</td>
-                                            <td class="text-center amount-cell"></td>
+                                            <td class="text-center">@user.Amount</td>
                                             <td class="text-center">
                                                 @{
                                                     var status = user.PaymentStatus?.ToLower();
@@ -107,7 +107,7 @@
                     </div>
 
                     <div class="mb-3">
-                        <label>Created Date</label>
+                        <label>Subscription Date</label>
                         <input type="text" id="modalCreatedAt" class="form-control" readonly />
                     </div>
 
