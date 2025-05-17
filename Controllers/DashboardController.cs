@@ -70,6 +70,44 @@ namespace UserSupervision.Controllers
             return View(usersWithCompanies);
         }
 
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> SaveBill(int userId, decimal amount, DateTime fromDate, DateTime toDate, int subscriptionId)
+        {
+            try
+            {
+                var bill = new UserBillStatus
+                {
+                    SubscriptionId = subscriptionId,
+                    Amount = amount,
+                    BillDate = DateTime.Now,
+                    DueDate = toDate,
+                    PaymentStatus = "Due"  
+                };
+
+                _appDbContext.UserBillStatuses.Add(bill);
+                await _appDbContext.SaveChangesAsync();
+
+                var userBillStatus = await _appDbContext.UserBillStatuses
+                    .Where(b => b.SubscriptionId == subscriptionId && b.PaymentStatus == "Unpaid")
+                    .OrderByDescending(b => b.BillDate)
+                    .FirstOrDefaultAsync();
+
+                if (userBillStatus != null)
+                {
+                    userBillStatus.PaymentStatus = "Unpaid";  
+                    await _appDbContext.SaveChangesAsync();
+                }
+
+                return Json(new { success = true }); 
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);  
+                return Json(new { success = false, message = ex.Message }); 
+            }
+        }
+
 
 
 

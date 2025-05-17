@@ -8,9 +8,7 @@
         <div class="row">
             <div class="col-sm-12">
                 <div class="card">
-                    <div class="card-body">
-                        <a href="#" class="text-secondary f-w-400 float-end" data-bs-toggle="modal" data-bs-target="#AddBillModal">Add New Bill Generate</a>
-                        <br />
+                    <div class="card-body">                    
                         <div class="dt-responsive">
                             <table id="dom-jqry" class="table table-striped table-bordered nowrap">
                                 <thead>
@@ -23,7 +21,7 @@
                                         <th class="text-center">Send Email</th>
                                         <th class="text-center">Company Name</th>
                                         <th class="text-center">Day</th>
-
+                                        <th class="text-center">Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -35,7 +33,7 @@
                                         <tr>
                                             <td class="text-center">@countSL</td>
                                             <td class="text-center">@user.User.FullName</td>
-                                            <td class="text-center">N/A</td>
+                                            <td class="text-center amount-cell"></td>
                                             <td class="text-center">
                                                 @{
                                                     var status = user.PaymentStatus?.ToLower();
@@ -67,6 +65,16 @@
 
                                             <td class="text-center">@user.CompanyName</td>
                                             <td class="text-center">@((DateTime.Now.Date - user.User.CreatedAt.Date).Days)</td>
+                                            <td class="text-center">
+                                                <button class="btn btn-sm btn-info open-bill-modal"
+                                                        data-userid="@user.User.Id"
+                                                        data-username="@user.User.FullName"
+                                                        data-createdat="@user.User.CreatedAt.ToString("yyyy-MM-dd")"
+                                                        data-subscriptionid="@user.User.SubscriptionId">
+                                                    Generate Bill
+                                                </button>
+                                            </td>
+
                                         </tr>
                                         countSL++;
                                     }
@@ -81,72 +89,118 @@
 </section>
 
 
-
-@section Scripts {
-    <script>
-        $(document).ready(function () {
-            $('#dom-jqry').DataTable({});
-        });
-    </script>
-    }
-
-
 <div class="modal fade" id="AddBillModal" tabindex="-1" aria-labelledby="AddBillModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="AddBillModalLabel">User List</h5>
+                <h5 class="modal-title" id="AddBillModalLabel">Generate Bill</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <table class="table table-striped table-bordered nowrap">
-                    <thead>
-                        <tr>
-                            <th class="text-center">Full Name</th>
-                            <th class="text-center">Created Date</th>
-                            <th class="text-center">Amount</th>
-                            <th class="text-center">Bill Generated On</th>
-                            <th class="text-center">From Date</th>
-                            <th class="text-center">To Date</th>
-                            <th class="text-center">Days Since Created</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var user in Model)
-                        {
+                <form method="post" asp-action="SaveBill" asp-controller="Dashboard">
+                    <input type="hidden" name="UserId" id="modalUserId" />
+                    <input type="hidden" name="SubscriptionId" id="modalSubscriptionId" />
 
-                            <tr>
-                                <td class="text-center">@user.User.FullName</td>
-                                <td class="text-center">@user.User.CreatedAt.ToString("yyyy-MM-dd")</td>
-                                <td class="text-center">
-                                    <input type="number" class="form-control amount-input"
-                                           placeholder="Enter amount" />
-                                </td>
-                                <td class="text-center">@DateTime.Now.ToString("yyyy-MM-dd")</td>
-                                <td class="text-center">
-                                    <input type="date" class="form-control from-date" />
-                                </td>
-                                <td class="text-center">
-                                    <input type="date" class="form-control to-date" />
-                                </td>
-                                <td class="text-center">@((DateTime.Now.Date - user.User.CreatedAt.Date).Days)</td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" id="saveBills">Save Bills</button>
-            </div>
+                    <div class="mb-3">
+                        <label>Full Name</label>
+                        <input type="text" id="modalFullName" class="form-control" readonly />
+                    </div>
+
+                    <div class="mb-3">
+                        <label>Created Date</label>
+                        <input type="text" id="modalCreatedAt" class="form-control" readonly />
+                    </div>
+
+                    <div class="mb-3">
+                        <label>Bill Amount</label>
+                        <input type="number" name="Amount" id="modalAmount" class="form-control" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label>From Date</label>
+                        <input type="date" name="FromDate" id="modalFromDate" class="form-control" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label>To Date</label>
+                        <input type="date" name="ToDate" id="modalToDate" class="form-control" />
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save Bills</button>
+                    </div>
+                </form>
+            </div>          
         </div>
     </div>
 </div>
 
-<script>
-    $(document).ready(function() {
-        $('#saveBills').click(function() {
-            alert('Bill data saved successfully!');
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('#dom-jqry').DataTable();
+
+            let currentRow = null;
+
+            $('.open-bill-modal').click(function () {
+                const button = $(this);
+                const userId = button.data('userid');
+                const fullName = button.data('username');
+                const createdAt = button.data('createdat');
+                const subscriptionId = button.data('subscriptionid');
+
+                $('#modalUserId').val(userId);
+                $('#modalFullName').val(fullName);
+                $('#modalCreatedAt').val(createdAt);
+                $('#modalSubscriptionId').val(subscriptionId);
+
+                currentRow = button.closest('tr');
+
+                $('#AddBillModal').modal('show');
+            });
+
+                           $('#saveBills').click(function () {
+            const amount = $('#modalAmount').val();
+            const fromDate = $('#modalFromDate').val();
+            const toDate = $('#modalToDate').val();
+            const userId = $('#modalUserId').val();
+            const subscriptionId = $('#modalSubscriptionId').val();
+
+            if (!amount || !fromDate || !toDate) {
+                alert('Please enter valid information.');
+                return;
+            }
+
+            // Make an AJAX call to save the bill and update the payment status
+            $.ajax({
+                url: '@Url.Action("SaveBill", "Dashboard")', // Make sure the URL is correct
+                method: 'POST',
+                data: {
+                    userId: userId,
+                    amount: amount,
+                    fromDate: fromDate,
+                    toDate: toDate,
+                    subscriptionId: subscriptionId
+                },
+                success: function (response) {
+                    if (response.success) {
+                        // Update the amount and status in the table
+                        currentRow.find('.amount-cell').text(amount);
+                        currentRow.find('.payment-status-cell').text("Due");
+
+                        $('#AddBillModal').modal('hide');
+                    } else {
+                        alert("Failed to save the bill: " + response.message); // Show the error message from the controller
+                    }
+                },
+                error: function () {
+                    alert("Error while saving the bill.");
+                }
+            });
         });
-    });
-</script>
+
+
+        });
+    </script>
+}
