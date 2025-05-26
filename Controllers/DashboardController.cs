@@ -39,7 +39,6 @@ namespace UserSupervision.Controllers
         }
 
 
-        [Authorize]
         public async Task<IActionResult> BillIndex()
         {
             var users = await _context.Users
@@ -60,7 +59,9 @@ namespace UserSupervision.Controllers
             var usersWithCompanies = users.Select(u =>
             {
                 var latestBill = userBillStatuses
-                    .Where(b => b.SubscriptionId == u.User.SubscriptionId && b.UserId == u.User.Id)
+                    .Where(b => b.SubscriptionId == u.User.SubscriptionId
+                             && b.UserId == u.User.Id
+                             && b.PaymentStatus != "Paid")
                     .OrderByDescending(b => b.BillDate)
                     .FirstOrDefault();
 
@@ -68,64 +69,96 @@ namespace UserSupervision.Controllers
                 {
                     User = u.User,
                     CompanyName = u.CompanyName,
-                    PaymentStatus = latestBill?.PaymentStatus ?? "Unpaid",
-                    Amount = latestBill?.Amount ?? 0 
+                    PaymentStatus = latestBill?.PaymentStatus ?? "",  
+                    Amount = latestBill?.Amount ?? 0
                 };
             }).ToList();
+
 
             return View(usersWithCompanies);
         }
 
         [HttpPost]
-        [Authorize]
+
+        [HttpPost]
         public async Task<IActionResult> SaveBill(int userId, decimal amount, DateTime fromDate, DateTime toDate, int subscriptionId)
         {
             try
             {
-                var previousDueBills = await _appDbContext.UserBillStatuses
+                var existingBill = await _appDbContext.UserBillStatuses
                     .Where(b => b.UserId == userId &&
                                 b.SubscriptionId == subscriptionId &&
-                                b.PaymentStatus == "Due")
-                    .ToListAsync();
+                                (b.PaymentStatus == "Due" || b.PaymentStatus == "Partial Paid"))
+                    .OrderByDescending(b => b.BillDate)
+                    .FirstOrDefaultAsync();
 
-                foreach (var bill in previousDueBills)
+                if (existingBill != null)
                 {
-                    bill.PaymentStatus = "Unpaid";
+                    existingBill.Amount = amount;
+                    existingBill.BillDate = DateTime.Now;
+                    existingBill.DueDate = toDate;
+                    existingBill.FromDate = fromDate; 
+                }
+                else
+                {
+                    var newBill = new UserBillStatus
+                    {
+                        UserId = userId,
+                        SubscriptionId = subscriptionId,
+                        Amount = amount,
+                        BillDate = DateTime.Now,
+                        DueDate = toDate,
+                        FromDate = fromDate, 
+                        PaymentStatus = "Due",
+                        InvoiceNumber = $"B-{subscriptionId}-{userId}-{DateTime.Now:yyyyMMddHHmmss}"
+                    };
+
+                    _appDbContext.UserBillStatuses.Add(newBill);
                 }
 
-                var newBill = new UserBillStatus
-                {
-                    UserId = userId,
-                    SubscriptionId = subscriptionId,
-                    Amount = amount,
-                    BillDate = DateTime.Now,
-                    DueDate = toDate,
-                    PaymentStatus = "Due",
-                    InvoiceNumber = $"B-{subscriptionId}{DateTime.Now:dd}{DateTime.Now:MM}{DateTime.Now:yyyy}"
-                };
-
-                _appDbContext.UserBillStatuses.Add(newBill);
                 await _appDbContext.SaveChangesAsync();
-
                 return RedirectToAction("BillIndex");
             }
             catch (Exception ex)
             {
                 ModelState.AddModelError("", ex.Message);
-                return View("BillIndex"); 
-
+                return View("BillIndex");
             }
         }
 
         public async Task<IActionResult> BillPay()
         {
             var bills = await _appDbContext.UserBillStatuses
-                .Where(b => b.PaymentStatus == "Due" || b.PaymentStatus == "Unpaid")
+                .Where(b => b.PaymentStatus != "Paid")
                 .ToListAsync();
 
-            return View(bills);
+            var payments = await _appDbContext.BillPays.ToListAsync();
+
+            var viewModel = bills.Select(bill =>
+            {
+                var totalPaid = payments
+                    .Where(p => p.InvoiceNumber == bill.InvoiceNumber)
+                    .Sum(p => p.AmountPaid);
+
+                return new BillPayViewModel
+                {
+                    InvoiceNumber = bill.InvoiceNumber,
+                    SubscriptionId = bill.SubscriptionId,
+                    BillAmount = bill.Amount,
+                    AmountPaid = totalPaid,
+                    MoneyReceiptOrCheckNumber = payments
+                        .Where(p => p.InvoiceNumber == bill.InvoiceNumber)
+                        .OrderByDescending(p => p.PaymentDate)
+                        .Select(p => p.MoneyReceiptOrCheckNumber)
+                        .FirstOrDefault()
+                };
+            }).ToList();
+
+            return View(viewModel); 
         }
 
+
+        [HttpPost]
         [HttpPost]
         public async Task<IActionResult> PayBill(BillPayViewModel model)
         {
@@ -135,26 +168,36 @@ namespace UserSupervision.Controllers
             if (bill == null)
             {
                 ModelState.AddModelError("", "Bill not found");
-                return View("BillPay");
+                return RedirectToAction("BillPay");
             }
 
-            var billPay = new BillPay
+            var newPayment = new BillPay
             {
                 InvoiceNumber = model.InvoiceNumber,
                 SubscriptionId = model.SubscriptionId,
                 AmountPaid = model.AmountPaid,
                 MoneyReceiptOrCheckNumber = model.MoneyReceiptOrCheckNumber,
-                Status = model.AmountPaid >= bill.Amount ? "Paid" : "Partial Paid",
+                Status = model.AmountPaid + _appDbContext.BillPays
+                             .Where(p => p.InvoiceNumber == model.InvoiceNumber)
+                             .Sum(p => p.AmountPaid)
+                         >= bill.Amount ? "Paid" : "Partial Paid",
                 PaymentDate = DateTime.Now
             };
 
-            bill.PaymentStatus = billPay.Status;
+            _appDbContext.BillPays.Add(newPayment);
 
-            _appDbContext.BillPays.Add(billPay);
+            var totalPaid = await _appDbContext.BillPays
+                .Where(p => p.InvoiceNumber == model.InvoiceNumber)
+                .SumAsync(p => p.AmountPaid);
+
+            bill.PaymentStatus = (totalPaid + model.AmountPaid) >= bill.Amount ? "Paid" : "Partial Paid";
+            _appDbContext.UserBillStatuses.Update(bill);
+
             await _appDbContext.SaveChangesAsync();
-
             return RedirectToAction("BillPay");
         }
+
+
 
 
 

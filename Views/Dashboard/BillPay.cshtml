@@ -1,4 +1,4 @@
-﻿@model IEnumerable<UserSupervision.Models.UserBillStatus>
+﻿@model IEnumerable<UserSupervision.Models.ViewModel.BillPayViewModel>
 @{
     Layout = "_AdminLayout";
     ViewBag.Title = "All Users";
@@ -14,7 +14,10 @@
                                 <thead>
                                     <tr>
                                         <th>Invoice</th>
-                                        <th>Amount</th>
+                                        <th>Total Amount</th>
+                                        <th>Paid</th>
+                                        <th>Remaining</th>
+                                        <th>Last Receipt</th>
                                         <th>Pay</th>
                                     </tr>
                                 </thead>
@@ -23,12 +26,15 @@
                                     {
                                         <tr>
                                             <td>@bill.InvoiceNumber</td>
-                                            <td>@bill.Amount</td>
+                                            <td>@bill.BillAmount</td>
+                                            <td>@bill.AmountPaid</td>
+                                            <td>@bill.RemainingBalance</td>
+                                            <td>@bill.MoneyReceiptOrCheckNumber</td>
                                             <td>
                                                 <form asp-action="PayBill" method="post">
                                                     <input type="hidden" name="InvoiceNumber" value="@bill.InvoiceNumber" />
                                                     <input type="hidden" name="SubscriptionId" value="@bill.SubscriptionId" />
-                                                    <input type="hidden" name="BillAmount" value="@bill.Amount" />
+                                                    <input type="hidden" name="BillAmount" value="@bill.BillAmount" />
                                                     <input type="number" step="0.01" name="AmountPaid" placeholder="Amount Paid" required />
                                                     <input type="text" name="MoneyReceiptOrCheckNumber" placeholder="Receipt/Check No." required />
                                                     <button type="submit" class="btn btn-sm btn-primary">Pay</button>
@@ -37,6 +43,7 @@
                                         </tr>
                                     }
                                 </tbody>
+
                             </table>
                         </div>
                     </div>
