@@ -11,6 +11,8 @@ namespace UserSupervision.Data
         public DbSet<SupervisionUser> SupervisionTable { get; set; }
         public DbSet<UserBillStatus> UserBillStatuses { get; set; }
         public DbSet<BillPay> BillPays { get; set; }
+        public DbSet<Menu> Menus { get; set; }
+
 
     }
 }

@@ -14,17 +14,15 @@
                                 <thead>
                                     <tr>
                                         <th class="text-center">SL No.</th>
-                                        <th class="text-center">Full Name</th>
+                                        <th class="text-center">Name</th>
                                         <th class="text-center">Bill Amount</th>
-                                        <th class="text-center">Payment Status</th>
+                                        <th class="text-center">Status</th>
                                         <th class="text-center">Send Email</th>
                                         <th class="text-center">Company Name</th>
                                         <th class="text-center">Day</th>
-                                        <th class="text-center">Edit</th>
                                         <th class="text-center">Actions</th>
                                     </tr>
                                 </thead>
-
                                 <tbody>
                                     @{
                                         int countSL = 1;
@@ -63,11 +61,12 @@
                                                     <i class="ti ti-mail"></i>
                                                 </a>
                                             </td>
-
                                             <td class="text-center">@user.CompanyName</td>
                                             <td class="text-center">@((DateTime.Now.Date - user.User.CreatedAt.Date).Days)</td>
+
                                             <td class="text-center">
                                                 <button class="btn btn-sm btn-info open-bill-modal"
+                                                        title="Edit Bill"
                                                         data-userid="@user.User.Id"
                                                         data-username="@user.User.FullName"
                                                         data-createdat="@user.User.CreatedAt.ToString("yyyy-MM-dd")"
@@ -75,21 +74,18 @@
                                                         data-subscriptionid="@user.User.SubscriptionId"
                                                         data-amount="@user.Amount"
                                                         data-editmode="true">
-                                                    Edit Bill
+                                                    <i class="ti ti-edit"></i>
                                                 </button>
-
-                                            </td>
-
-                                            <td class="text-center">
                                                 <button class="btn btn-sm btn-info open-bill-modal"
+                                                        title="Generate Bill"
                                                         data-userid="@user.User.Id"
                                                         data-username="@user.User.FullName"
                                                         data-createdat="@user.User.CreatedAt.ToString("yyyy-MM-dd")"
                                                         data-lasttodate="@user.LastBillToDate?.ToString("yyyy-MM-dd")"                                                        data-subscriptionid="@user.User.SubscriptionId">
-                                                    Generate Bill
+                                                 <i class="ti ti-file-text"></i>
+
                                                 </button>
                                             </td>
-
                                         </tr>
                                         countSL++;
                                     }
@@ -115,32 +111,26 @@
                 <form method="post" asp-action="SaveBill" asp-controller="Dashboard">
                     <input type="hidden" name="UserId" id="modalUserId" />
                     <input type="hidden" name="SubscriptionId" id="modalSubscriptionId" />
-
                     <div class="mb-3">
                         <label>Full Name</label>
                         <input type="text" id="modalFullName" class="form-control" readonly />
                     </div>
-
                     <div class="mb-3">
                         <label>Subscription Date</label>
                         <input type="text" id="modalCreatedAt" class="form-control" readonly />
                     </div>
-
                     <div class="mb-3">
                         <label>Bill Amount</label>
                         <input type="number" name="Amount" id="modalAmount" class="form-control" />
                     </div>
-
                     <div class="mb-3">
                         <label>From Date</label>
                         <input type="date" name="FromDate" id="modalFromDate" class="form-control" />
                     </div>
-
                     <div class="mb-3">
                         <label>To Date</label>
                         <input type="date" name="ToDate" id="modalToDate" class="form-control" />
                     </div>
-
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                         <button type="submit" class="btn btn-primary">Save Bills</button>
@@ -193,8 +183,6 @@
             $('#AddBillModal').modal('show');
         });
 
-
-
                            $('#saveBills').click(function () {
             const amount = $('#modalAmount').val();
             const fromDate = $('#modalFromDate').val();
@@ -205,9 +193,7 @@
             if (!amount || !fromDate || !toDate) {
                 alert('Please enter valid information.');
                 return;
-            }
-
-           
+            }          
             $.ajax({
                 url: '@Url.Action("SaveBill", "Dashboard")', 
                 method: 'POST',

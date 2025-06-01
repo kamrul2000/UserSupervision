@@ -1,0 +1,79 @@
+﻿@model List<UserSupervision.Models.ViewModel.ReportViewModel>
+@{
+    Layout = "_AdminLayout";
+    ViewBag.Title = "Report";
+    var statuses = ViewBag.Statuses as List<string>;
+}
+
+<section class="pc-container">
+    <div class="pc-content">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="card">
+                    <div class="card-body">
+
+                        <form method="get" asp-action="ShowReport" asp-controller="Report" class="mb-3 row">
+                            <div class="col-md-4">
+                                <label>Status Filter</label>
+                                <select name="statusFilter" class="form-control" onchange="this.form.submit()">
+                                    <option value="">All Status</option>
+                                    @foreach (var status in statuses)
+                                    {
+                                        var selected = Context.Request.Query["statusFilter"] == status ? "selected" : "";
+                                        <option value="@status" selected="@selected">@status</option>
+                                    }
+                                </select>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label>Company Name</label>
+                                <input type="text" name="companySearch" value="@Context.Request.Query["companySearch"]" class="form-control" placeholder="Search by Company" />
+                            </div>
+
+                            <div class="col-md-4 d-flex align-items-end">
+                                <button type="submit" class="btn btn-primary">Search</button>
+                            </div>
+                        </form>
+
+                        <div class="table-responsive">
+                            <table id="dom-jqry" class="table table-striped table-bordered nowrap">
+                                <thead>
+                                    <tr>
+                                        <th>SL No</th>
+                                        <th>Name</th>
+                                        <th>Amount</th>
+                                        <th>From Date</th>
+                                        <th>To Date</th>
+                                        <th>Company Name</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model)
+                                    {
+                                        <tr>
+                                            <td>@item.SLNo</td>
+                                            <td>@item.UserName</td>
+                                            <td>@item.Amount</td>
+                                            <td>@item.FromDate.ToShortDateString()</td>
+                                            <td>@item.ToDate.ToShortDateString()</td>
+                                            <td>@item.CompanyName</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('#dom-jqry').DataTable();
+        });
+    </script>
+}

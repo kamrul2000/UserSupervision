@@ -37,8 +37,6 @@ namespace UserSupervision.Controllers
                 throw;
             }
         }
-
-
         public async Task<IActionResult> BillIndex()
         {
             var users = await _context.Users
@@ -64,7 +62,6 @@ namespace UserSupervision.Controllers
                              && b.PaymentStatus != "Paid")
                     .OrderByDescending(b => b.BillDate)
                     .FirstOrDefault();
-
                 return new UserWithCompanyViewModel
                 {
                     User = u.User,
@@ -73,12 +70,8 @@ namespace UserSupervision.Controllers
                     Amount = latestBill?.Amount ?? 0
                 };
             }).ToList();
-
-
             return View(usersWithCompanies);
         }
-
-        [HttpPost]
 
         [HttpPost]
         public async Task<IActionResult> SaveBill(int userId, decimal amount, DateTime fromDate, DateTime toDate, int subscriptionId)
@@ -91,7 +84,6 @@ namespace UserSupervision.Controllers
                                 (b.PaymentStatus == "Due" || b.PaymentStatus == "Partial Paid"))
                     .OrderByDescending(b => b.BillDate)
                     .FirstOrDefaultAsync();
-
                 if (existingBill != null)
                 {
                     existingBill.Amount = amount;
@@ -125,8 +117,7 @@ namespace UserSupervision.Controllers
                 return View("BillIndex");
             }
         }
-
-        public async Task<IActionResult> BillPay()
+     public async Task<IActionResult> BillPay()
         {
             var bills = await _appDbContext.UserBillStatuses
                 .Where(b => b.PaymentStatus != "Paid")
@@ -156,9 +147,6 @@ namespace UserSupervision.Controllers
 
             return View(viewModel); 
         }
-
-
-        [HttpPost]
         [HttpPost]
         public async Task<IActionResult> PayBill(BillPayViewModel model)
         {
@@ -196,12 +184,6 @@ namespace UserSupervision.Controllers
             await _appDbContext.SaveChangesAsync();
             return RedirectToAction("BillPay");
         }
-
-
-
-
-
-
 
     }
 }

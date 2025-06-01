@@ -8,24 +8,17 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <!-- [Favicon] icon -->
 <link rel="icon" href="~/images/logonew-removebg.png" type="image/x-icon"> <!-- [Google Font] Family -->
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700&display=swap" id="main-font-link">
-<!-- [Tabler Icons] https://tablericons.com -->
 <link rel="stylesheet" href="~/assets/fonts/tabler-icons.min.css" >
-<!-- [Feather Icons] https://feathericons.com -->
 <link rel="stylesheet" href=".~/assets/fonts/feather.css" >
-<!-- [Font Awesome Icons] https://fontawesome.com/icons -->
 <link rel="stylesheet" href="~/assets/fonts/fontawesome.css" >
-<!-- [Material Icons] https://fonts.google.com/icons -->
 <link rel="stylesheet" href="~/assets/fonts/material.css" >
-<!-- [Template CSS Files] -->
 <link rel="stylesheet" href="~/assets/css/style.css" id="main-style-link" >
 <link rel="stylesheet" href="~/assets/css/style-preset.css" >
  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" />
 </head>
 <body data-pc-preset="preset-1" data-pc-direction="ltr" data-pc-theme="light">
-  <!-- [ Pre-loader ] start -->
 <div class="loader-bg">
   <div class="loader-track">
     <div class="loader-fill"></div>
@@ -75,6 +68,28 @@
                                 <span class="pc-mtext">Bill Pay</span>
                             </a>
                         </li>
+
+                        
+                        <li class="pc-item pc-hasmenu">
+                            <a href="#!" class="pc-link">
+                                <span class="pc-micon">
+                                    <i class="ti ti-receipt"></i>
+                                </span>
+                                <span class="pc-mtext">Report</span>
+                            </a>
+                            <ul class="pc-submenu">
+                                <li class="pc-item pc-hasmenu">
+                                    <a asp-controller="Report" asp-action="ShowReport" asp-route-statusFilter="" class="pc-link">All Status</a>
+                                </li>                            
+                            </ul>
+                        </li>
+
+                        <li class="pc-item pc-hasmenu">
+                            <a asp-controller="MenuMangement" asp-action="Menus" class="pc-link">
+                                <span class="pc-micon"><i class="ti ti-report-money"></i> </span>
+                                <span class="pc-mtext">Menu Management</span>
+                            </a>
+                        </li>
                     }
                 </ul>
             </div>
@@ -85,7 +100,6 @@
   <div class="header-wrapper"> 
 <div class="me-auto pc-mob-drp">
   <ul class="list-unstyled">
-    <!-- ======= Menu collapse Icon ===== -->
     <li class="pc-h-item pc-sidebar-collapse">
       <a href="#" class="pc-head-link ms-0" id="sidebar-hide">
         <i class="ti ti-menu-2"></i>
@@ -171,11 +185,8 @@
     <div>
         @RenderBody()
     </div>
-  <!-- [Page Specific JS] start -->
   <script src="~/assets/js/plugins/apexcharts.min.js"></script>
   <script src="~/assets/js/pages/dashboard-default.js"></script>
-  <!-- [Page Specific JS] end -->
-  <!-- Required Js -->
   <script src="~/assets/js/plugins/popper.min.js"></script>
   <script src="~/assets/js/plugins/simplebar.min.js"></script>
   <script src="~/assets/js/plugins/bootstrap.min.js"></script>
@@ -204,10 +215,8 @@
   
   <script>font_change("Public-Sans");</script>
 
-    <!-- jQuery (first) -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
-    <!-- DataTables JS (after jQuery) -->
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
     @RenderSection("Scripts", required: false)
 </body>
