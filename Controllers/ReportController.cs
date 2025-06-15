@@ -9,7 +9,7 @@ namespace UserSupervision.Controllers
     {
         private readonly AccuStockDbContext _context;
         private readonly AppDbContext _appDbContext;
-
+        
         public ReportController(AccuStockDbContext context, AppDbContext appDbContext)
         {
             _context = context;
